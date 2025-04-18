@@ -50,5 +50,21 @@
    - 그 다음부터는 계속 Gemini와 소통
 
 4. 메신저봇R은 외부와 소통이 불가능하여 Gemini와 소통이 불가능 => "Tasker(유료 앱) 사용"
+### 미팅 후
+1. 카카오톡 공유 API로 구현 가능하다. 마음이 너무 급해서 내가 놓친 부분들이 많다.
+   - main.py를 보면 flask를 이용해서 로컬 서버에 접근한다.
+   - app key는 카카오 디벨로퍼스 내의 js 키
+   - 공유까지 잘 되지만, 팀장님께서 말씀하신 것처럼 해당 링크를 누르면 접속이 되지 않음  
+   (이 부분은 proxy url을 전달받아 적용할 예정)
+   - UI보다는 기능 구현이 우선이기 때문에 UI는 뒤로 미뤄두고 다음 기능들부터 제작
+2. 구현해야 할 기능들
+   - 프로그램 화면 구성 => 일단은 기능 테스트가 가능하도록 최대한 간단하게 구성  
+   <span style='color:blue'>예상: 04.18 </span> <span style='color:red'>완성: </span>
+   - BabyNews(테스트용)을 크롤링하여 대략 2~3개씩 링크 삽입 - 크롤링부터 도전  
+   <span style='color:blue'>예상: 04.18 </span> <span style='color:red'>완성: </span>
+   - GPT와 소통하여 크롤링 한 뉴스 20자 내로 요약   
+   <span style='color:blue'>예상: 04.19 </span> <span style='color:red'>완성: </span>
+   - 요약한 글을 공유 링크의 제목으로 설정한 후 해당 링크에 접속이 가능한지 확인  
+   <span style='color:blue'>예상: 04.20 </span> <span style='color:red'>완성: </span>  
 
-### 진행 상황 - Tasker
+**3. 목표 완성 기간: 4.21(월)**
