@@ -59,12 +59,27 @@
    - UI보다는 기능 구현이 우선이기 때문에 UI는 뒤로 미뤄두고 다음 기능들부터 제작
 2. 구현해야 할 기능들
    - 프로그램 화면 구성 => 일단은 기능 테스트가 가능하도록 최대한 간단하게 구성  
-   <span style='color:blue'>예상: 04.18 </span> <span style='color:red'>완성: </span>
+   <span style='color:blue'>예상: 04.18 </span> <span style='color:red'>완성: 04.18</span>
    - BabyNews(테스트용)을 크롤링하여 대략 2~3개씩 링크 삽입 - 크롤링부터 도전  
-   <span style='color:blue'>예상: 04.18 </span> <span style='color:red'>완성: </span>
+   <span style='color:blue'>예상: 04.18 </span> <span style='color:red'>완성: 04.21</span>
    - GPT와 소통하여 크롤링 한 뉴스 20자 내로 요약   
-   <span style='color:blue'>예상: 04.19 </span> <span style='color:red'>완성: </span>
+   <span style='color:blue'>예상: 04.19 </span> <span style='color:red'>완성: 04.21</span>
    - 요약한 글을 공유 링크의 제목으로 설정한 후 해당 링크에 접속이 가능한지 확인  
    <span style='color:blue'>예상: 04.20 </span> <span style='color:red'>완성: </span>  
 
 **3. 목표 완성 기간: 4.21(월)**
+***
+# 25.04.21
+### 진행 상황
+1. 프로그램 UI
+- 일단 기본적인 요소들만: 서버 시작, 작업 수행, 로그 표시
+2. 크롤링
+- BabyNews의 임신/출산 탭 접속
+- 한 페이지에 뜨는 뉴스를 긁어와 날짜와 링크를 딕셔너리 형식으로 저장
+  - 하루에 n개씩 띄운다고 가정할 때, 날짜를 기준으로 공유하는 방법도 있기 때문  
+  ex) 21일에는 20일자 뉴스 n개, 22일에는 21일자 뉴스 n개 등
+- 링크 접속 후 본문 추출
+3. Gemini
+- 추출한 본문을 15자 이내로 요약
+  - 이는 공유하기 시 제목으로 사용할 예정
+- 

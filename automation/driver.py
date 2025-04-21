@@ -24,6 +24,3 @@ def get_url():
     url = URL + PORT
     print(url)
     driver.get("http://localhost:" + PORT)
-
-def find_elements(by, element):
-    return driver.find_elements(by, element)
