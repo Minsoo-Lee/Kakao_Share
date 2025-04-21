@@ -4,6 +4,7 @@ from web import server
 from automation import automator
 import wx.richtext as rt
 from window import log
+from automation import crawling
 
 def run_wx():
     app = wx.App(False)
@@ -23,10 +24,14 @@ def set_frame(frame):
     frame_sizer = wx.BoxSizer(wx.VERTICAL)
     log_sizer = wx.BoxSizer(wx.VERTICAL)
 
+    crawling_panel = set_crawling(panel)
     server_panel = set_server(panel)
     task_panel = set_task(panel)
+
+
     log_panel = set_log(panel)
 
+    button_sizer.Add(crawling_panel, 0)
     button_sizer.Add(server_panel, 0)
     button_sizer.Add(task_panel, 0)
 
@@ -41,6 +46,21 @@ def set_frame(frame):
 
     frame_sizer.Add(panel, 1, wx.EXPAND)
     frame.SetSizerAndFit(frame_sizer)
+
+def set_crawling(panel):
+    crawl_panel = wx.Panel(panel, wx.ID_ANY)
+    crawl_sizer = wx.BoxSizer(wx.VERTICAL)
+
+    # 논리적 에러 뜨면 wx.Size 삭제
+    crawling_button: Button = wx.Button(crawl_panel, wx.ID_ANY, "크롤링", size=wx.Size(200, 30))
+    crawling_button.Bind(wx.EVT_BUTTON, lambda event: crawling.start_crawling())
+    crawling_button.Enable(True)
+
+    crawl_sizer.Add(crawling_button, 0, wx.ALL, 5)
+
+    crawl_panel.SetSizer(crawl_sizer)
+
+    return crawl_panel
 
 def set_server(panel):
     server_panel = wx.Panel(panel, wx.ID_ANY)
@@ -62,11 +82,11 @@ def set_task(panel):
     task_sizer = wx.BoxSizer(wx.VERTICAL)
 
     # 논리적 에러 뜨면 wx.Size 삭제
-    execute_button: Button = wx.Button(task_panel, wx.ID_ANY, "작업 수행", size=wx.Size(200, 30))
-    execute_button.Bind(wx.EVT_BUTTON, lambda event: automator.start_task())
-    execute_button.Enable(True)
+    task_button: Button = wx.Button(task_panel, wx.ID_ANY, "작업 수행", size=wx.Size(200, 30))
+    task_button.Bind(wx.EVT_BUTTON, lambda event: automator.start_task())
+    task_button.Enable(True)
 
-    task_sizer.Add(execute_button, 0, wx.ALL, 5)
+    task_sizer.Add(task_button, 0, wx.ALL, 5)
 
     task_panel.SetSizer(task_sizer)
 

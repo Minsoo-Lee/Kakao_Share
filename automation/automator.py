@@ -20,12 +20,4 @@ def set_task():
     wx.CallAfter(log.append_log, "URL에 접속합니다")
     driver.get_url()
 
-    # set_gemini
-    wx.CallAfter(log.append_log, "Gemini를 초기화합니다.")
-    ai.init_gemini()
-    wx.CallAfter(log.append_log, "Gemini를 초기화 완료")
-    execute_task()
 
-def execute_task():
-    wx.CallAfter(log.append_log, "뉴스를 긁어오는 중입니다.")
-    cr.crawl_lists()
