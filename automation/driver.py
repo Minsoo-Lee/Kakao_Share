@@ -1,5 +1,6 @@
 import time
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 driver = None
 URL = "http://localhost:"
@@ -24,4 +25,5 @@ def get_url():
     print(url)
     driver.get("http://localhost:" + PORT)
 
-
+def find_elements(by, element):
+    return driver.find_elements(by, element)
