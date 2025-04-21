@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 import threading, os
+from window import log  # log 모듈에서 가져옴
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Kakao_Share/
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')  # Kakao_Share/templates
@@ -12,6 +14,7 @@ def start_server():
     flask_thread.start()
 
 def run_flask():
+    log.append_log("서버를 시작합니다.")
     app.run(debug=True, port=8787, use_reloader=False)
 
 @app.route('/')

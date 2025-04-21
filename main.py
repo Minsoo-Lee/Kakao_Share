@@ -1,6 +1,6 @@
 # from flask import Flask, render_template
 
-from setting import frame
+from window import frame
 #
 # app = Flask(__name__)
 #
