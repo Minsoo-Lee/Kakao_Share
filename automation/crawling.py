@@ -28,7 +28,6 @@ def crawl_lists():
         # 차라리 여기서 3개를 추출하는 것이 빠를지도
         # 아직 컨셉이 잡힌 것이 없으니 놔두자
         for i in range(3):
-            print(lists[i])
             article_info = {}
 
             # 링크 추출
@@ -57,10 +56,11 @@ def crawl_lists():
 
             response = requests.get(article_url)
             if response.status_code == 200:
-                soup = bs(response.content, 'html.parser')
-                lists = soup.find_all("div", {"class": 'IMGFLOATING'})
+                soup_img = bs(response.content, 'html.parser')
+                lists_img = soup_img.find_all("div", {"class": 'IMGFLOATING'})
+                print(len(lists_img))
 
-                img_tag = lists[i].find("img", src=True)
+                img_tag = lists_img[0].find("img", src=True)
                 img_url = BASE_URL + img_tag["src"]
                 article_info["img"] = img_url
                 print(img_url)
