@@ -6,6 +6,7 @@ driver = None
 URL = "http://localhost:"
 PORT = "9004"
 main_window = None
+inp_check = None
 
 def init_chrome():
     global driver, main_window
@@ -60,3 +61,44 @@ def deactivate_popup():
     driver.switch_to.window(main_window)
     time.sleep(1)
 
+def check_login():
+    try:
+        driver.find_element(By.XPATH, "/html/body/div/div/div[2]/div[2]/div[2]/div")
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def ready_chatroom():
+    driver.find_element(By.XPATH, "/html/body/div/div/div[2]/ul/li[2]/a").click()
+    time.sleep(1)
+
+def is_chatroom_exist(room_name):
+    global inp_check
+
+    unit_chats = driver.find_elements(By.CLASS_NAME, "unit_chat")
+
+    for chat in unit_chats:
+        try:
+            label = chat.find_element(By.CLASS_NAME, "tit_name")
+
+            if label.text.strip() == room_name:
+                # 해당 chat 내의 체크박스 요소 저장
+                inp_check_candidate = chat.find_element(By.CLASS_NAME, "inp_check")
+                inp_check = inp_check_candidate
+                print("room_name = " + room_name + " / " + label.text.strip())
+                return True
+
+        except Exception as e:
+            print(e)
+            continue
+
+    return False
+
+def click_chatroom():
+    global inp_check
+    inp_check.click()
+    time.sleep(1)
+
+def click_share():
+    driver.find_element(By.XPATH, "/html/body/div/div/div[2]/div[3]/button/div/span").click()

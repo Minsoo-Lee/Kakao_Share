@@ -9,6 +9,9 @@ from automation import crawling
 def enable_task_button():
     task_button.Enable(True)
 
+def disable_task_button():
+    task_button.Enable(False)
+
 def set_buttons_after_crawl():
     crawling_button.Enable(False)
     server_button.Enable(True)
@@ -57,7 +60,8 @@ task_button: Button = wx.Button(button_panel, wx.ID_ANY, "작업 수행", size=w
 task_button.Bind(wx.EVT_BUTTON,
     lambda event: automator.start_task(
         on_done_callback=set_buttons_after_task,
-        on_done_login=enable_task_button
+        on_done_login=enable_task_button,
+        on_complete_login=disable_task_button
     )
 )
 task_button.Enable(True)
