@@ -122,9 +122,10 @@
    - 아직 발생하지 않았지만, 쓰레드 충돌 가능성도 염두해 두어야 함
 
 ### 해야할 일
-1. Title, Img URL 따서 html에 넘겨주기
-   - Title은 현재 Gemini 할당량 이슈로 고정 제목을 전달 (title1, 2, 3...)
-   - Img URL 정상적으로 전달되는 것 확인  
-2. <span style='color:red'>버튼 활성화 및 비활성화 (완료)</span>
+1. <span style='color:red'>Title, Img URL 따서 html에 넘겨주기 - (완료)</span>
+2. <span style='color:red'>버튼 활성화 및 비활성화 - (완료)</span>
 3. 공유까지 자동화 (중간에 로그인은 수동으로)
+   - 카카오 로그인 버튼에서 한번 정지  
+   => 버튼 활성화 및 예외처리를 통해 로그인 인증이 완료되었는지 체크
+   - 인증이 완료되어 버튼을 다시 누를 경우 작업 계속 수행
 4. Proxy URL 설정

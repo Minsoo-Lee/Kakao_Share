@@ -21,7 +21,7 @@ def run_flask(on_done_callback):
         wx.CallAfter(on_done_callback)  # UI 업데이트는 메인 스레드에서 안전하게 수행
 
     log.append_log("서버를 시작합니다.")
-    app.run(debug=True, port=8787, use_reloader=False)
+    app.run(debug=True, port=9004, use_reloader=False)
 
 @app.route('/')
 def share():
@@ -30,14 +30,14 @@ def share():
     default_image = 'http://k.kakaocdn.net/dn/bDPMIb/btqgeoTRQvd/49BuF1gNo6UXkdbKecx600/kakaolink40_original.png'
     default_link = 'https://developers.kakao.com'
 
-    tmp = summaries[0]
-    # print(json.dumps(summaries, indent=4, ensure_ascii=False))
+
+    print(json.dumps(summaries, indent=4, ensure_ascii=False))
 
     for i in range(3):
         contents.append({
             'title': summaries[i]["title"],
             'description': summaries[i]["description"], # 필요에 따라 변경
-            'imageUrl': summaries[i]["img"],
+            'imageUrl': summaries[i]["img"] if summaries[i]["img"] else default_image,
             'link': {
                 'mobileWebUrl': summaries[i]["url"],
                 'webUrl': summaries[i]["url"],
@@ -60,7 +60,7 @@ def share():
         })
 
     return render_template('shared.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa', contents=contents)
-
+#
 # @app.route('/')
 # def share():
 #     return render_template('share.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa')

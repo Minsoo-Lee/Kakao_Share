@@ -21,6 +21,7 @@ def start_crawling(on_done_callback=None):
 def crawl_lists(on_done_callback):
     global URL, BASE_URL
     response = requests.get(URL)
+    gemini.init_gemini()
 
     if response.status_code == 200:  # 정상 응답 반환 시 아래 코드블록 실행
         soup = bs(response.content, 'html.parser')  # 응답 받은 HTML 파싱
@@ -53,10 +54,10 @@ def crawl_lists(on_done_callback):
             # 쓰레드 동기화가 걸린다면, 이건 나중에 추가하는 것도 고려해볼 만 함
             # Gemini API 할당량 이슈 - 일단 고정 제목으로 테스트
             # 원래는 이거로 동적 생성
-            # paragraph = get_paragraph(article_url)
-            # title = wx.CallAfter(gemini.get_response, paragraph)
-            # article_info["title"] = title
-            article_info["title"] = "title" + (i + 1).__str__()
+            paragraph = get_paragraph(article_url)
+            title = gemini.get_response(paragraph)
+            article_info["title"] = title
+            # article_info["title"] = "title" + (i + 1).__str__()
 
             response = requests.get(article_url)
             if response.status_code == 200:
@@ -64,10 +65,13 @@ def crawl_lists(on_done_callback):
                 lists_img = soup_img.find_all("div", {"class": 'IMGFLOATING'})
                 print(len(lists_img))
 
-                img_tag = lists_img[0].find("img", src=True)
-                img_url = BASE_URL + img_tag["src"]
-                article_info["img"] = img_url
-                print(img_url)
+                if len(lists_img) == 0:
+                    article_info["img"] = None
+                else:
+                    img_tag = lists_img[0].find("img", src=True)
+                    img_url = BASE_URL + img_tag["src"]
+                    article_info["img"] = img_url
+                    print(img_url)
 
 
             # description 은 "육아"로 고정

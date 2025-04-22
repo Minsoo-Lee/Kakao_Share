@@ -21,8 +21,16 @@ def append_log(log):
     elif '초기화' in log:
         color = wx.BLUE
     log = current_time + log
+    #
+    # log_text_widget.BeginTextColour(color)
+    # log_text_widget.WriteText(log + "\n")
+    # log_text_widget.EndTextColour()
+    # log_text_widget.ShowPosition(log_text_widget.GetLastPosition())
 
-    log_text_widget.BeginTextColour(color)
-    log_text_widget.WriteText(log + "\n")
-    log_text_widget.EndTextColour()
-    log_text_widget.ShowPosition(log_text_widget.GetLastPosition())
+    def update_ui():
+        log_text_widget.BeginTextColour(color)
+        log_text_widget.WriteText(log + "\n")
+        log_text_widget.EndTextColour()
+        log_text_widget.ShowPosition(log_text_widget.GetLastPosition())
+
+    wx.CallAfter(update_ui)  # 👈 메인쓰레드에서 실행되도록 보장
