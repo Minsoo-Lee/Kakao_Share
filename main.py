@@ -12,5 +12,4 @@ from window import frame
 
 if __name__ == '__main__':
     gemini.init_gemini()
-    frame.run_wx()
     # app.run(debug=True, port=8787)

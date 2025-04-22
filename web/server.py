@@ -3,6 +3,7 @@ import threading, os
 from window import log  # log 모듈에서 가져옴
 from automation import crawling as cr
 import json
+import wx
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Kakao_Share/
@@ -10,12 +11,15 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')  # Kakao_Share/templates
 
 app = Flask(__name__, template_folder=TEMPLATE_DIR)
 
-def start_server():
-    flask_thread = threading.Thread(target=run_flask)
+def start_server(on_done_callback=None):
+    flask_thread = threading.Thread(target=run_flask, args=(on_done_callback,))
     flask_thread.daemon = True  # 프로그램 종료 시 서버도 종료되도록 설정
     flask_thread.start()
 
-def run_flask():
+def run_flask(on_done_callback):
+    if on_done_callback:
+        wx.CallAfter(on_done_callback)  # UI 업데이트는 메인 스레드에서 안전하게 수행
+
     log.append_log("서버를 시작합니다.")
     app.run(debug=True, port=8787, use_reloader=False)
 

@@ -12,12 +12,13 @@ URL = f"{BASE_URL}/news/articleList.html?sc_sub_section_code=S2N1&view_type=sm"
 
 news_list = []
 
-def start_crawling():
-    task_thread = threading.Thread(target=crawl_lists())
+def start_crawling(on_done_callback=None):
+    task_thread = threading.Thread(target=crawl_lists, args=(on_done_callback,))
     task_thread.daemon = True  # 프로그램 종료 시 서버도 종료되도록 설정
     task_thread.start()
 
-def crawl_lists():
+
+def crawl_lists(on_done_callback):
     global URL, BASE_URL
     response = requests.get(URL)
 
@@ -50,9 +51,12 @@ def crawl_lists():
 
             # 제목 추출
             # 쓰레드 동기화가 걸린다면, 이건 나중에 추가하는 것도 고려해볼 만 함
-            paragraph = get_paragraph(article_url)
-            title = wx.CallAfter(gemini.get_response, paragraph)
-            article_info["title"] = title
+            # Gemini API 할당량 이슈 - 일단 고정 제목으로 테스트
+            # 원래는 이거로 동적 생성
+            # paragraph = get_paragraph(article_url)
+            # title = wx.CallAfter(gemini.get_response, paragraph)
+            # article_info["title"] = title
+            article_info["title"] = "title" + (i + 1).__str__()
 
             response = requests.get(article_url)
             if response.status_code == 200:
@@ -71,6 +75,8 @@ def crawl_lists():
 
             news_list.append(article_info)
     # print(json.dumps(news_list, indent=4, ensure_ascii=False))
+    if on_done_callback:
+        wx.CallAfter(on_done_callback)  # UI 업데이트는 메인 스레드에서 안전하게 수행
 
 def get_paragraph(article_url):
     response = requests.get(article_url)

@@ -123,6 +123,8 @@
 
 ### 해야할 일
 1. Title, Img URL 따서 html에 넘겨주기
-2. 버튼 활성화 및 비활성화
+   - Title은 현재 Gemini 할당량 이슈로 고정 제목을 전달 (title1, 2, 3...)
+   - Img URL 정상적으로 전달되는 것 확인  
+2. <span style='color:red'>버튼 활성화 및 비활성화 (완료)</span>
 3. 공유까지 자동화 (중간에 로그인은 수동으로)
 4. Proxy URL 설정

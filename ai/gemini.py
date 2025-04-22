@@ -1,7 +1,7 @@
 import google.generativeai as genai
 import time, re
 
-gemini_key = "AIzaSyD-UX1nCOw-XnZ-wTHVL6lXjesb9W7teEg"
+gemini_key = "AIzaSyA1eJ6rzCHxHzrLoLb7OvjamMjmo9XzdY8"
 model = None
 
 def init_gemini():
