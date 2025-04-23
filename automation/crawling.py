@@ -8,7 +8,15 @@ from window import frame
 
 import requests
 BASE_URL = "https://www.ibabynews.com"
-URL = f"{BASE_URL}/news/articleList.html?sc_sub_section_code=S2N1&view_type=sm"
+URL = [
+    {"category": "육아/교육", "link": "/news/articleList.html?sc_section_code=S1N4&view_type=sm"},
+    {"category": "여성/가족", "link": "/news/articleList.html?sc_section_code=S1N8&view_type=sm"},
+    {"category": "오피니언", "link": "/news/articleList.html?sc_section_code=S1N6&view_type=sm"},
+]
+
+index = 0
+
+# URL = f"{BASE_URL}/news/articleList.html?sc_sub_section_code=S2N1&view_type=sm"
 
 news_list = []
 
@@ -19,9 +27,9 @@ def start_crawling(on_done_callback=None):
 
 
 def crawl_lists(on_done_callback):
-    global URL, BASE_URL
+    global URL, BASE_URL, index
     log.append_log("크롤링을 시작합니다.")
-    response = requests.get(URL)
+    response = requests.get(BASE_URL + URL[index]['link'])
     gemini.init_gemini()
 
     if response.status_code == 200:  # 정상 응답 반환 시 아래 코드블록 실행
@@ -53,12 +61,12 @@ def crawl_lists(on_done_callback):
 
             # 제목 추출
             # 쓰레드 동기화가 걸린다면, 이건 나중에 추가하는 것도 고려해볼 만 함
-            # Gemini API 할당량 이슈 - 일단 고정 제목으로 테스트
+            # 빠른 테스트를 위해 제목 고정
             # 원래는 이거로 동적 생성
-            paragraph = get_paragraph(article_url)
-            title = gemini.get_response(paragraph)
-            article_info["title"] = title
-            # article_info["title"] = "title" + (i + 1).__str__()
+            # paragraph = get_paragraph(article_url)
+            # title = gemini.get_response(paragraph)
+            # article_info["title"] = title
+            article_info["title"] = "title"
 
             response = requests.get(article_url)
             if response.status_code == 200:
@@ -76,7 +84,7 @@ def crawl_lists(on_done_callback):
 
 
             # description 은 "육아"로 고정
-            article_info["description"] = "육아"
+            article_info["description"] = URL[index]['category']
 
             news_list.append(article_info)
     # print(json.dumps(news_list, indent=4, ensure_ascii=False))
