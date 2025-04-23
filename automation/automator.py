@@ -21,6 +21,7 @@ def set_task(on_done_callback, on_done_login, on_complete_login):
         if on_done_login:
             wx.CallAfter(on_done_login)  # UI 업데이트는 메인 스레드에서 안전하게 수행
         if_login = True
+        log.append_log("카카오 인증 후 작업 수행 버튼을 다시 눌러주세요.")
     else:
         if driver.check_login():
             print("SUCCESS!")
@@ -30,11 +31,14 @@ def set_task(on_done_callback, on_done_login, on_complete_login):
             if driver.is_chatroom_exist("테스트"):
                 driver.click_chatroom()
                 driver.click_share()
+                # 채팅방 닫기 구현 필요
+
             # 채팅 - 방 이름 탐색
             # 없으면 False 반환 - 종료
             # 있으면 계속 진행
         else:
             print("FAIL!")
+            log.append_log("카카오 인증이 되지 않았습니다. 다시 시도해주세요.")
 
 
 def before_login():
@@ -46,13 +50,9 @@ def before_login():
         wx.CallAfter(log.append_log, "크롬 초기화 완료")
         is_chrome_init = True
     wx.CallAfter(log.append_log, "URL에 접속합니다")
-    print(1)
     driver.get_url()
-    print(2)
     time.sleep(1)
-    print(3)
     driver.click_share_button()
-    print(4)
 
     # 팝업창 전환 후 로그인
     driver.activate_popup()
