@@ -1,20 +1,12 @@
-import wx, time
+import wx
 from wx import Button
 from web import server
 from automation import automator
 import wx.richtext as rt
 from window import log
-from automation import crawling
 
 def enable_task_button():
     task_button.Enable(True)
-
-def disable_task_button():
-    task_button.Enable(False)
-
-def set_buttons_after_crawl():
-    crawling_button.Enable(False)
-    server_button.Enable(True)
 
 def set_buttons_after_server():
     server_button.Enable(False)
@@ -34,15 +26,15 @@ frame_sizer = wx.BoxSizer(wx.VERTICAL)
 button_panel = wx.Panel(panel, wx.ID_ANY)
 button_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-# crawling 버튼 설정
-crawling_button: Button = wx.Button(button_panel, wx.ID_ANY, "크롤링", size=wx.Size(200, 30))
-crawling_button.Bind(
-    wx.EVT_BUTTON,
-    lambda event: crawling.start_crawling(
-        on_done_crawl=set_buttons_after_crawl
-    )
-)
-crawling_button.Enable(True)
+# crawling 버튼 설정 - 작업 수행과 통합
+# crawling_button: Button = wx.Button(button_panel, wx.ID_ANY, "크롤링", size=wx.Size(200, 30))
+# crawling_button.Bind(
+#     wx.EVT_BUTTON,
+#     lambda event: crawling.start_crawling(
+#         on_done_crawl=set_buttons_after_crawl
+#     )
+# )
+# crawling_button.Enable(True)
 
 # server 버튼 설정
 server_button: Button = wx.Button(button_panel, wx.ID_ANY, "서버 시작", size=wx.Size(200, 30))
@@ -59,15 +51,12 @@ server_button.Enable(True)
 task_button: Button = wx.Button(button_panel, wx.ID_ANY, "작업 수행", size=wx.Size(200, 30))
 task_button.Bind(wx.EVT_BUTTON,
     lambda event: automator.start_task(
-        on_done_callback=set_buttons_after_task,
-        on_done_login=enable_task_button,
-        on_complete_login=disable_task_button,
-        on_done_crawl=set_buttons_after_crawl
+        on_done_callback=set_buttons_after_task
     )
 )
 task_button.Enable(True)
 
-button_sizer.Add(crawling_button, 0)
+# button_sizer.Add(crawling_button, 0)
 button_sizer.Add(server_button, 0)
 button_sizer.Add(task_button, 0)
 

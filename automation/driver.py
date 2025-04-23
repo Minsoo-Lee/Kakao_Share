@@ -50,6 +50,13 @@ def activate_popup():
             break
     time.sleep(1)
 
+def check_login_needed():
+    try:
+        driver.find_element(By.XPATH, "/html/body/div/div/div/main/article/div/div/form/div[1]/div/input")
+        return True
+    except:
+        return False
+
 def execute_login():
     driver.find_element(By.XPATH, "/html/body/div/div/div/main/article/div/div/form/div[1]/div/input").send_keys("minsoo1101@naver.com")
     driver.find_element(By.XPATH, "/html/body/div/div/div/main/article/div/div/form/div[2]/div/input").send_keys("msLee9164@@")
@@ -57,11 +64,15 @@ def execute_login():
     driver.find_element(By.XPATH, "/html/body/div/div/div/main/article/div/div/form/div[4]/button[1]").click()
     time.sleep(1)
 
+def close_popup():
+    driver.find_element(By.XPATH, "/html/body/div/div/div[2]/div[3]/button").click()
+    time.sleep(1)
+
 def deactivate_popup():
     driver.switch_to.window(main_window)
     time.sleep(1)
 
-def check_login():
+def check_login_done():
     try:
         driver.find_element(By.XPATH, "/html/body/div/div/div[2]/div[2]/div[2]/div")
         return True
@@ -90,7 +101,6 @@ def is_chatroom_exist(room_name):
                 return True
 
         except Exception as e:
-            print(e)
             continue
 
     return False
@@ -102,3 +112,4 @@ def click_chatroom():
 
 def click_share():
     driver.find_element(By.XPATH, "/html/body/div/div/div[2]/div[3]/button/div/span").click()
+    time.sleep(1)

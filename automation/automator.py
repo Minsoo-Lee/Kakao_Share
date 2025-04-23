@@ -1,50 +1,76 @@
 import threading
 from automation import driver
 import wx, time
+
+from automation.driver import check_login_needed
 from window import log
 from automation import crawling
+from apscheduler.schedulers.background import BackgroundScheduler
 
-if_login = False
+if_login_success = False
 is_chrome_init = False
 
-def start_task(on_done_callback=None, on_done_login=None, on_complete_login=None, on_done_crawl=None):
-    task_thread = threading.Thread(target=set_task, args=(on_done_callback, on_done_login, on_complete_login, on_done_crawl))
-    task_thread.daemon = True  # 프로그램 종료 시 서버도 종료되도록 설정
+def start_task(on_done_callback=None):
+
+    def run_task():
+        set_task(on_done_callback)
+
+    task_thread = threading.Thread(target=run_task, daemon=False)
     task_thread.start()
 
-def set_task(on_done_callback, on_done_login, on_complete_login, on_done_crawl):
-    global if_login
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(
+        lambda: threading.Thread(target=run_task, daemon=False).start(),
+        'interval',
+        minutes=10
+    )
+    scheduler.start()
 
-    crawling.crawl_lists(on_done_crawl)
+    # task_thread = threading.Thread(target=set_task, args=(on_done_callback, on_done_login, on_complete_login, on_done_crawl))
+    # task_thread.daemon = True  # 프로그램 종료 시 서버도 종료되도록 설정
+    # task_thread.start()
 
-    if if_login is False:
-        if on_done_callback:
-            wx.CallAfter(on_done_callback)  # UI 업데이트는 메인 스레드에서 안전하게 수행
-        before_login()
-        if on_done_login:
-            wx.CallAfter(on_done_login)  # UI 업데이트는 메인 스레드에서 안전하게 수행
-        if_login = True
-        log.append_log("카카오 인증 후 작업 수행 버튼을 다시 눌러주세요.")
-    else:
-        if driver.check_login():
-            print("SUCCESS!")
-            if on_complete_login:
-                wx.CallAfter(on_complete_login)
-            driver.ready_chatroom()
-            if driver.is_chatroom_exist("테스트"):
-                driver.click_chatroom()
-                driver.click_share()
-                # 채팅방 닫기 구현 필요
+def set_task(on_done_callback):
+    global if_login_success
 
-            # 채팅 - 방 이름 탐색
-            # 없으면 False 반환 - 종료
-            # 있으면 계속 진행
-        else:
-            print("FAIL!")
-            log.append_log("카카오 인증이 되지 않았습니다. 다시 시도해주세요.")
+    # URL 접속 => 팝업 창 전환
+    crawling.crawl_lists()
+    if on_done_callback:
+        wx.CallAfter(on_done_callback)  # UI 업데이트는 메인 스레드에서 안전하게 수행
+    enter_url()
 
+    # 로그인 화면이 뜨는지 확인
+    if check_login_needed():
+        log.append_log("로그인을 진행합니다.")
+        driver.execute_login()
+        log.append_log("카카오 인증을 진행해주세요.")
 
-def before_login():
+        # 못 찾을 경우 1초마다 확인
+        index = 1
+        while True:
+            try:
+                login_done = driver.check_login_done()
+                if login_done:
+                    log.append_log("카카오 인증을 완료하였습니다.")
+                    break
+            except Exception as e:
+                print(f"index = {index}")
+                time.sleep(1)
+                index += 1
+                continue
+
+    # 로그인 후 버튼 비활성화
+    driver.ready_chatroom()
+    if driver.is_chatroom_exist("테스트"):
+        log.append_log("채팅방을 탐색합니다.")
+        driver.click_chatroom()
+        driver.click_share()
+        log.append_log("공유를 완료하였습니다.")
+        driver.close_popup()
+        log.append_log("팝업창을 종료합니다.")
+        driver.deactivate_popup()
+
+def enter_url():
     global is_chrome_init
 
     if is_chrome_init is False:
@@ -59,7 +85,9 @@ def before_login():
 
     # 팝업창 전환 후 로그인
     driver.activate_popup()
-    driver.execute_login()
+
+    # 이건 메인문에서 실행
+    # driver.execute_login()
 
     # 작업 수행 버튼 다시 활성화 하고, 로그인 인증 진행
 

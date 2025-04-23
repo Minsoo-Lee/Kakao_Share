@@ -61,10 +61,10 @@ def run_flask(on_done_callback):
 #
 #     return render_template('shared.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa', contents=contents)
 
-# @app.route('/')
-# def share():
-#     return render_template('share.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa')
-
 @app.route('/')
 def share():
-    return render_template('feed.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa')
+    return render_template('share.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa')
+
+# @app.route('/')
+# def share():
+#     return render_template('feed.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa')

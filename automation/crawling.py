@@ -26,7 +26,7 @@ def start_crawling(on_done_callback=None):
     task_thread.start()
 
 
-def crawl_lists(on_done_callback):
+def crawl_lists():
     global URL, BASE_URL, index
     log.append_log("크롤링을 시작합니다.")
     response = requests.get(BASE_URL + URL[index]['link'])
@@ -88,9 +88,7 @@ def crawl_lists(on_done_callback):
 
             news_list.append(article_info)
     # print(json.dumps(news_list, indent=4, ensure_ascii=False))
-    if on_done_callback:
-        wx.CallAfter(on_done_callback)  # UI 업데이트는 메인 스레드에서 안전하게 수행
-    log.append_log("크롤링이 완료되었습니다. 서버를 시작해 주세요.")
+    log.append_log("크롤링이 완료되었습니다.")
 
 def get_paragraph(article_url):
     response = requests.get(article_url)
