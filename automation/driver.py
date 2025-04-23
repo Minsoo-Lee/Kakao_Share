@@ -3,8 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 driver = None
-URL = "http://localhost:"
-PORT = "9004"
+URL = "https://localhost:"
+PORT = "9005"
 main_window = None
 inp_check = None
 
