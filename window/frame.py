@@ -39,7 +39,7 @@ crawling_button: Button = wx.Button(button_panel, wx.ID_ANY, "크롤링", size=w
 crawling_button.Bind(
     wx.EVT_BUTTON,
     lambda event: crawling.start_crawling(
-        on_done_callback=set_buttons_after_crawl
+        on_done_crawl=set_buttons_after_crawl
     )
 )
 crawling_button.Enable(True)
@@ -61,7 +61,8 @@ task_button.Bind(wx.EVT_BUTTON,
     lambda event: automator.start_task(
         on_done_callback=set_buttons_after_task,
         on_done_login=enable_task_button,
-        on_complete_login=disable_task_button
+        on_complete_login=disable_task_button,
+        on_done_crawl=set_buttons_after_crawl
     )
 )
 task_button.Enable(True)

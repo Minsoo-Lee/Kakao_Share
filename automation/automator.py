@@ -2,17 +2,20 @@ import threading
 from automation import driver
 import wx, time
 from window import log
+from automation import crawling
 
 if_login = False
 is_chrome_init = False
 
-def start_task(on_done_callback=None, on_done_login=None, on_complete_login=None):
-    task_thread = threading.Thread(target=set_task, args=(on_done_callback, on_done_login, on_complete_login))
+def start_task(on_done_callback=None, on_done_login=None, on_complete_login=None, on_done_crawl=None):
+    task_thread = threading.Thread(target=set_task, args=(on_done_callback, on_done_login, on_complete_login, on_done_crawl))
     task_thread.daemon = True  # 프로그램 종료 시 서버도 종료되도록 설정
     task_thread.start()
 
-def set_task(on_done_callback, on_done_login, on_complete_login):
+def set_task(on_done_callback, on_done_login, on_complete_login, on_done_crawl):
     global if_login
+
+    crawling.crawl_lists(on_done_crawl)
 
     if if_login is False:
         if on_done_callback:
