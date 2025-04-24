@@ -28,8 +28,10 @@ def start_crawling(on_done_callback=None):
 
 def crawl_lists():
     global URL, BASE_URL, index
+    news_list.clear()
     log.append_log("크롤링을 시작합니다.")
     response = requests.get(BASE_URL + URL[index]['link'])
+    print(f"======= request url = [{BASE_URL + URL[index]['link']}] =======================")
     gemini.init_gemini()
 
     if response.status_code == 200:  # 정상 응답 반환 시 아래 코드블록 실행
@@ -63,10 +65,10 @@ def crawl_lists():
             # 쓰레드 동기화가 걸린다면, 이건 나중에 추가하는 것도 고려해볼 만 함
             # 빠른 테스트를 위해 제목 고정
             # 원래는 이거로 동적 생성
-            # paragraph = get_paragraph(article_url)
-            # title = gemini.get_response(paragraph)
-            # article_info["title"] = title
-            article_info["title"] = "title"
+            paragraph = get_paragraph(article_url)
+            title = gemini.get_response(paragraph)
+            article_info["title"] = title
+            # article_info["title"] = "title"
 
             response = requests.get(article_url)
             if response.status_code == 200:
@@ -89,6 +91,7 @@ def crawl_lists():
             news_list.append(article_info)
     # print(json.dumps(news_list, indent=4, ensure_ascii=False))
     log.append_log("크롤링이 완료되었습니다.")
+    index += 1
 
 def get_paragraph(article_url):
     response = requests.get(article_url)

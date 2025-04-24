@@ -22,7 +22,7 @@ def start_task(on_done_callback=None):
     scheduler.add_job(
         lambda: threading.Thread(target=run_task, daemon=False).start(),
         'interval',
-        minutes=10
+        minutes=2
     )
     scheduler.start()
 
