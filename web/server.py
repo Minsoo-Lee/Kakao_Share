@@ -71,7 +71,16 @@ def run_flask(on_done_callback):
 
 @app.route('/')
 def share():
-    raw_body = cr.news_list['title'] + cr.news_list['body']
-    escape_body = raw_body.replace('"', '')
+    # raw_body = cr.news_list['title'] + "\n" + cr.news_list['body']
+    # body = raw_body.replace('"', '').replace("'", "")
+    # raw_body = "test"
+
+    title = cr.news_list['title'].strip().replace('"', '').replace("'", "")
+    body = cr.news_list['body'].strip().replace('"', '').replace("'", "")
+
+    formatted_link = "https://localhost:9005/proxy?target=" + cr.news_list['link'].replace('https', 'http')
+    # formatted_link = cr.news_list['link'].replace('https', 'http')
+    print(formatted_link)
+
     return render_template('text.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa',
-                           body = escape_body, link = cr.news_list['link'])
+                           title=title, body=body, link=formatted_link)

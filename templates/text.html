@@ -14,10 +14,10 @@
     Kakao.Share.createDefaultButton({
       container: '#kakaotalk-share-btn',
       objectType: 'text',
-      text: '{{ body|safe }}',
+      text: "["+'{{ title }}'+"]" + "\n\n" + '{{ body }}',
       link: {
-        mobileWebUrl: '{{ link }}',
-        webUrl: '{{ link }}',
+        mobileWebUrl: '{{ link|tojson }}',
+        webUrl: '{{ link|tojson }}',
       },
     });
 

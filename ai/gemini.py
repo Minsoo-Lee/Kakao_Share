@@ -1,7 +1,8 @@
 import google.generativeai as genai
 
+gemini_key = "AIzaSyDo6wlM9Q6SFKS-rpHoS_sJQabVt9OEDnI"
 # gemini_key = "AIzaSyA1eJ6rzCHxHzrLoLb7OvjamMjmo9XzdY8"
-gemini_key = "AIzaSyDjTR8G2RpGYH58e3dtAD4cuUYn2JzWkdU"
+# gemini_key = "AIzaSyDjTR8G2RpGYH58e3dtAD4cuUYn2JzWkdU"
 model = None
 
 def init_gemini():
@@ -30,6 +31,9 @@ def get_title_body(body):
             {body}
             
             이 기사를 읽고 제목을 15자가 넘지 않게, 본문은 150자 이내로 요약해 줘.
+            그리고 문장 요약할 때 특수문자는 , . 이 두개만 써야 해. 다른 건 절대 쓰지 마
+            물음표, 느낌표도 절대 쓰지마 제발 하지 말라는건 하지 마.
+            쌍따옴표("), 홑따옴표(') 이 두개도 절대 쓰지 마
             그리고 제목과 본문 사이에 [!@#$%]라는 문자열을 넣어줘
             """)
     result = response.text.split("[!@#$%]")
