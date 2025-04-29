@@ -23,6 +23,9 @@ panel = wx.Panel(frame, wx.ID_ANY)
 panel_sizer = wx.BoxSizer(wx.VERTICAL)
 frame_sizer = wx.BoxSizer(wx.VERTICAL)
 
+text_panel = wx.Panel(panel, wx.ID_ANY)
+text_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
 button_panel = wx.Panel(panel, wx.ID_ANY)
 button_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -35,6 +38,21 @@ button_sizer = wx.BoxSizer(wx.HORIZONTAL)
 #     )
 # )
 # crawling_button.Enable(True)
+
+# ID, PW, 방이름 받아 오기
+id_input_label = wx.StaticText(text_panel, wx.ID_ANY, "ID", size=(90, 20))
+id_input = wx.TextCtrl(text_panel, wx.ID_ANY, size=(230, 20))
+
+id_sizer = wx.BoxSizer(wx.HORIZONTAL)
+id_sizer.Add(id_input_label, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)  # wx.ALIGN_CENTER_VERTICAL로 수직 가운데 정렬
+id_sizer.Add(id_input, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
+pw_input_label = wx.StaticText(text_panel, wx.ID_ANY, "비밀번호", size=(90, 20))
+pw_input = wx.TextCtrl(text_panel, wx.ID_ANY, size=(230, 20), style=wx.TE_PASSWORD)
+
+pw_sizer = wx.BoxSizer(wx.HORIZONTAL)
+pw_sizer.Add(pw_input_label, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)  # wx.ALIGN_CENTER_VERTICAL로 수직 가운데 정렬
+pw_sizer.Add(pw_input, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
 # server 버튼 설정
 server_button: Button = wx.Button(button_panel, wx.ID_ANY, "서버 시작", size=wx.Size(200, 30))
@@ -60,6 +78,7 @@ task_button.Enable(True)
 button_sizer.Add(server_button, 0)
 button_sizer.Add(task_button, 0)
 
+text_panel.SetSizer(text_sizer)
 button_panel.SetSizer(button_sizer)
 
 # 로그 창 설정
@@ -72,7 +91,7 @@ log.set_log_widget(log_text_widget)  # 여기서 위젯 연결
 log_sizer.Add(log_text_widget, proportion=1, flag=wx.EXPAND | wx.ALL, border=5)
 log_panel.SetSizer(log_sizer)
 
-
+panel_sizer.Add(text_panel, 0, wx.EXPAND | wx.ALL, border=5)
 panel_sizer.Add(button_panel, 0, wx.EXPAND, 5)
 panel_sizer.Add(log_panel, 0, wx.EXPAND, 5)
 
