@@ -170,8 +170,8 @@
 ***
 # 25. 04. 29
 ### 진행사항
-1. <span style='color:red'>네이버 뉴스 크롤링 완료</span>
-2. <span style='color:red'>UI에 ID, PW, 채팅방 이름 추가 완료</span>
-3. <span style='color:red'>텍스트 템플릿 적용하여 공유 - 해결</span>
-4. Gemini를 ChatGPT로 변경
-5. 프롬프트에 예시 첨부
+1. <span style='color:red'>네이버 뉴스 크롤링 - 완료</span>
+2. <span style='color:red'>UI에 ID, PW, 채팅방 이름 추가 - 완료</span>
+3. <span style='color:red'>텍스트 템플릿 적용하여 공유 - 완료</span>
+4. <span style='color:red'>Gemini를 ChatGPT로 변경 - 완료</span>
+5. <span style='color:red'>프롬프트에 예시 첨부 - 완료</span>

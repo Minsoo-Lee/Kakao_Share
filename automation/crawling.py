@@ -5,6 +5,7 @@ from window import log
 from automation import driver
 import time
 import wx
+from ai import gpt
 
 import requests
 
@@ -118,12 +119,14 @@ def crawl_lists():
     lists = soup.find_all("li", class_=lambda x: x and 'NewsItem_news_item__' in x)
 
     a_tag_list = [li.find("a", href=True)["href"] for li in lists if li.find("a", href=True)]
-    gemini.init_gemini()
-    news_list['link'] = gemini.get_related_url(a_tag_list)
+    # gemini.init_gemini()
+    # news_list['link'] = gemini.get_related_url(a_tag_list)
+    news_list['link'] = gpt.get_related_url(a_tag_list)
     driver.get_url(news_list['link'])
     body = driver.get_body()
 
-    title, body = gemini.get_title_body(body)
+    # title, body = gemini.get_title_body(body)
+    title, body = gpt.get_title_body(body)
     wx.CallAfter(log.append_log, body)
     wx.CallAfter(log.append_log, title)
     news_list['title'] = title
