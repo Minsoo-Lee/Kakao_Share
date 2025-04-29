@@ -64,7 +64,14 @@ def run_flask(on_done_callback):
 # @app.route('/')
 # def share():
 #     return render_template('share.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa')
+#
+# @app.route('/')
+# def share():
+#     return render_template('feed.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa')
 
 @app.route('/')
 def share():
-    return render_template('feed.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa')
+    raw_body = cr.news_list['title'] + cr.news_list['body']
+    escape_body = raw_body.replace('"', '')
+    return render_template('text.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa',
+                           body = escape_body, link = cr.news_list['link'])

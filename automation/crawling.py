@@ -22,7 +22,7 @@ index = 0
 
 # URL = f"{BASE_URL}/news/articleList.html?sc_sub_section_code=S2N1&view_type=sm"
 
-news_list = []
+news_list = {}
 
 def start_crawling(on_done_callback=None):
     task_thread = threading.Thread(target=crawl_lists, args=(on_done_callback,))
@@ -118,9 +118,16 @@ def crawl_lists():
     lists = soup.find_all("li", class_=lambda x: x and 'NewsItem_news_item__' in x)
 
     a_tag_list = [li.find("a", href=True)["href"] for li in lists if li.find("a", href=True)]
-    print(a_tag_list)
     gemini.init_gemini()
-    gemini.get_related_url(a_tag_list)
+    news_list['link'] = gemini.get_related_url(a_tag_list)
+    driver.get_url(news_list['link'])
+    body = driver.get_body()
+
+    title, body = gemini.get_title_body(body)
+    wx.CallAfter(log.append_log, body)
+    wx.CallAfter(log.append_log, title)
+    news_list['title'] = title
+    news_list['body'] = body
 
     #     for i in range(3):
     #         article_info = {}

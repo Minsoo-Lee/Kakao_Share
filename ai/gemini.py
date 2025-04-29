@@ -1,7 +1,7 @@
 import google.generativeai as genai
-import time, re
 
-gemini_key = "AIzaSyA1eJ6rzCHxHzrLoLb7OvjamMjmo9XzdY8"
+# gemini_key = "AIzaSyA1eJ6rzCHxHzrLoLb7OvjamMjmo9XzdY8"
+gemini_key = "AIzaSyDjTR8G2RpGYH58e3dtAD4cuUYn2JzWkdU"
 model = None
 
 def init_gemini():
@@ -19,8 +19,21 @@ def get_related_url(urls):
             
             이 중에서 '아기, 교육, 키즈 에이전시'와 관련 있는 기사 url 하나만 뽑아서 출력해 줘.
             출력은 다른 말 필요 없이 url만 건네줘""")
-    print("[response] = " + response.text)
     return response.text
+
+def get_title_body(body):
+    global model
+
+    response = model.generate_content(f"""
+            여기 뉴스 기사가 있어.
+            
+            {body}
+            
+            이 기사를 읽고 제목을 15자가 넘지 않게, 본문은 150자 이내로 요약해 줘.
+            그리고 제목과 본문 사이에 [!@#$%]라는 문자열을 넣어줘
+            """)
+    result = response.text.split("[!@#$%]")
+    return result[0].strip(), result[1].strip()
 
 def get_response(p, max_retries=5):
     """

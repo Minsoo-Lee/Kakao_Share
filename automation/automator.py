@@ -22,7 +22,7 @@ def start_task(on_done_callback=None, data=None):
     scheduler.add_job(
         lambda: threading.Thread(target=run_task, daemon=False).start(),
         'interval',
-        minutes=2
+        minutes=5
     )
     scheduler.start()
 
@@ -33,7 +33,7 @@ def start_task(on_done_callback=None, data=None):
 def set_task(on_done_callback, data):
     global if_login_success
 
-    # URL 접속 => 팝업 창 전환
+    # 크롤링 시작 & news_list(crawling.py)에 저장
     crawling.crawl_lists()
 
     if on_done_callback:
@@ -80,7 +80,7 @@ def enter_url():
     #     is_chrome_init = True
     wx.CallAfter(log.append_log, "URL에 접속합니다")
     driver.get_url("http://localhost:" + PORT)
-    time.sleep(1)
+    time.sleep(2)
     driver.click_share_button()
 
     # 팝업창 전환 후 로그인

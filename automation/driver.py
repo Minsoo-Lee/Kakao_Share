@@ -33,8 +33,12 @@ def get_url(url):
 
 def click_share_button():
     # 이 부분은 UI 건들면 바뀔 수 있음
-    driver.find_element(By.XPATH, "/html/body/button").click()
-    time.sleep(1)
+    try:
+        driver.find_element(By.XPATH, "/html/body/button").click()
+        time.sleep(1)
+    except Exception as e:
+        print(e)
+
 
 def activate_popup():
     global main_window
@@ -116,3 +120,7 @@ def click_share():
 
 def get_pagesource():
     return driver.page_source
+
+def get_body():
+    element = driver.find_element(By.XPATH, "/html/body/div/div[2]/div/div[1]/div/div[1]/div/div[2]/article/div[1]")
+    return element.text
