@@ -7,12 +7,15 @@ from window import log
 from window import frame
 
 import requests
-BASE_URL = "https://www.ibabynews.com"
-URL = [
-    {"category": "육아/교육", "link": "/news/articleList.html?sc_section_code=S1N4&view_type=sm"},
-    {"category": "여성/가족", "link": "/news/articleList.html?sc_section_code=S1N8&view_type=sm"},
-    {"category": "오피니언", "link": "/news/articleList.html?sc_section_code=S1N6&view_type=sm"},
-]
+
+# BASE_URL = "https://www.ibabynews.com"
+# URL = [
+#     {"category": "육아/교육", "link": "/news/articleList.html?sc_section_code=S1N4&view_type=sm"},
+#     {"category": "여성/가족", "link": "/news/articleList.html?sc_section_code=S1N8&view_type=sm"},
+#     {"category": "오피니언", "link": "/news/articleList.html?sc_section_code=S1N6&view_type=sm"},
+# ]
+
+BASE_URL = "https://m.entertain.naver.com/now"
 
 index = 0
 
@@ -25,73 +28,146 @@ def start_crawling(on_done_callback=None):
     task_thread.daemon = True  # 프로그램 종료 시 서버도 종료되도록 설정
     task_thread.start()
 
+# www.ibabynews.com 크롤링
+# def crawl_lists():
+#     global URL, BASE_URL, index
+#     news_list.clear()
+#     log.append_log("크롤링을 시작합니다.")
+#     response = requests.get(BASE_URL + URL[index]['link'])
+#     print(f"======= request url = [{BASE_URL + URL[index]['link']}] =======================")
+#     gemini.init_gemini()
+#
+#     if response.status_code == 200:  # 정상 응답 반환 시 아래 코드블록 실행
+#         soup = bs(response.content, 'html.parser')  # 응답 받은 HTML 파싱
+#         lists = soup.find_all("div", {"class": 'list-block'})
+#
+#         # 차라리 여기서 3개를 추출하는 것이 빠를지도
+#         # 아직 컨셉이 잡힌 것이 없으니 놔두자
+#         for i in range(3):
+#             article_info = {}
+#
+#             # 링크 추출
+#             a_tag = lists[i].find("a", href=True)
+#             article_url = BASE_URL + a_tag["href"]
+#             article_info["url"] = article_url
+#
+#             # 날짜 추출
+#             date_div = lists[i].find("div", class_="list-dated")
+#             tmp_text = date_div.get_text(strip=True)
+#             date_text = tmp_text.split("|")[2].strip().split(" ")[0]
+#             article_info["date"] = date_text
+#
+#             # 이미지 소스 추출
+#             # img_tag = lists[i].find("img", src=True)
+#             # print(f"img_tag: {img_tag}")
+#             # img_url = BASE_URL + img_tag["src"][1:]
+#             # print(f"img_url: {img_url}")
+#             # article_info["img"] = img_url
+#
+#             # 제목 추출
+#             # 쓰레드 동기화가 걸린다면, 이건 나중에 추가하는 것도 고려해볼 만 함
+#             # 빠른 테스트를 위해 제목 고정
+#             # 원래는 이거로 동적 생성
+#             paragraph = get_paragraph(article_url)
+#             title = gemini.get_response(paragraph)
+#             article_info["title"] = title
+#             # article_info["title"] = "title"
+#
+#             response = requests.get(article_url)
+#             if response.status_code == 200:
+#                 soup_img = bs(response.content, 'html.parser')
+#                 lists_img = soup_img.find_all("div", {"class": 'IMGFLOATING'})
+#                 print(len(lists_img))
+#
+#                 if len(lists_img) == 0:
+#                     article_info["img"] = None
+#                 else:
+#                     img_tag = lists_img[0].find("img", src=True)
+#                     img_url = BASE_URL + img_tag["src"]
+#                     article_info["img"] = img_url
+#                     print(img_url)
+#
+#
+#             # description 은 "육아"로 고정
+#             article_info["description"] = URL[index]['category']
+#
+#             news_list.append(article_info)
+#     # print(json.dumps(news_list, indent=4, ensure_ascii=False))
+#     log.append_log("크롤링이 완료되었습니다.")
+#     index += 1
 
+
+# 네이버 뉴스 크롤링
 def crawl_lists():
     global URL, BASE_URL, index
     news_list.clear()
     log.append_log("크롤링을 시작합니다.")
-    response = requests.get(BASE_URL + URL[index]['link'])
-    print(f"======= request url = [{BASE_URL + URL[index]['link']}] =======================")
+    headers = {
+        'User-Agent': 'Mozilla/5.0'
+    }
+    response = requests.get(BASE_URL, headers=headers)
+    print(f"======= request url = [{BASE_URL}] =======================")
     gemini.init_gemini()
 
     if response.status_code == 200:  # 정상 응답 반환 시 아래 코드블록 실행
-        soup = bs(response.content, 'html.parser')  # 응답 받은 HTML 파싱
-        lists = soup.find_all("div", {"class": 'list-block'})
+        soup = bs(response.text, 'lxml')  # 응답 받은 HTML 파싱
+        lists = soup.find_all("li", class_=lambda x: x and 'NewsItem_news_item__' in x)
+        print("len = " + len(lists).__str__())
 
         # 차라리 여기서 3개를 추출하는 것이 빠를지도
         # 아직 컨셉이 잡힌 것이 없으니 놔두자
-        for i in range(3):
-            article_info = {}
-
-            # 링크 추출
-            a_tag = lists[i].find("a", href=True)
-            article_url = BASE_URL + a_tag["href"]
-            article_info["url"] = article_url
-
-            # 날짜 추출
-            date_div = lists[i].find("div", class_="list-dated")
-            tmp_text = date_div.get_text(strip=True)
-            date_text = tmp_text.split("|")[2].strip().split(" ")[0]
-            article_info["date"] = date_text
-
-            # 이미지 소스 추출
-            # img_tag = lists[i].find("img", src=True)
-            # print(f"img_tag: {img_tag}")
-            # img_url = BASE_URL + img_tag["src"][1:]
-            # print(f"img_url: {img_url}")
-            # article_info["img"] = img_url
-
-            # 제목 추출
-            # 쓰레드 동기화가 걸린다면, 이건 나중에 추가하는 것도 고려해볼 만 함
-            # 빠른 테스트를 위해 제목 고정
-            # 원래는 이거로 동적 생성
-            paragraph = get_paragraph(article_url)
-            title = gemini.get_response(paragraph)
-            article_info["title"] = title
-            # article_info["title"] = "title"
-
-            response = requests.get(article_url)
-            if response.status_code == 200:
-                soup_img = bs(response.content, 'html.parser')
-                lists_img = soup_img.find_all("div", {"class": 'IMGFLOATING'})
-                print(len(lists_img))
-
-                if len(lists_img) == 0:
-                    article_info["img"] = None
-                else:
-                    img_tag = lists_img[0].find("img", src=True)
-                    img_url = BASE_URL + img_tag["src"]
-                    article_info["img"] = img_url
-                    print(img_url)
-
-
-            # description 은 "육아"로 고정
-            article_info["description"] = URL[index]['category']
-
-            news_list.append(article_info)
-    # print(json.dumps(news_list, indent=4, ensure_ascii=False))
-    log.append_log("크롤링이 완료되었습니다.")
-    index += 1
+    #     for i in range(3):
+    #         article_info = {}
+    #
+    #         # 링크 추출
+    #         a_tag = lists[i].find("a", href=True)
+    #         article_url = BASE_URL + a_tag["href"]
+    #         article_info["url"] = article_url
+    #
+    #         # 날짜 추출
+    #         date_div = lists[i].find("div", class_="list-dated")
+    #         tmp_text = date_div.get_text(strip=True)
+    #         date_text = tmp_text.split("|")[2].strip().split(" ")[0]
+    #         article_info["date"] = date_text
+    #
+    #         # 이미지 소스 추출
+    #         # img_tag = lists[i].find("img", src=True)
+    #         # print(f"img_tag: {img_tag}")
+    #         # img_url = BASE_URL + img_tag["src"][1:]
+    #         # print(f"img_url: {img_url}")
+    #         # article_info["img"] = img_url
+    #
+    #         # 제목 추출
+    #         # 쓰레드 동기화가 걸린다면, 이건 나중에 추가하는 것도 고려해볼 만 함
+    #         # 빠른 테스트를 위해 제목 고정
+    #         # 원래는 이거로 동적 생성
+    #         paragraph = get_paragraph(article_url)
+    #         title = gemini.get_response(paragraph)
+    #         article_info["title"] = title
+    #         # article_info["title"] = "title"
+    #
+    #         response = requests.get(article_url)
+    #         if response.status_code == 200:
+    #             soup_img = bs(response.content, 'html.parser')
+    #             lists_img = soup_img.find_all("div", {"class": 'IMGFLOATING'})
+    #             print(len(lists_img))
+    #
+    #             if len(lists_img) == 0:
+    #                 article_info["img"] = None
+    #             else:
+    #                 img_tag = lists_img[0].find("img", src=True)
+    #                 img_url = BASE_URL + img_tag["src"]
+    #                 article_info["img"] = img_url
+    #                 print(img_url)
+    #
+    #
+    #         # description 은 "육아"로 고정
+    #         article_info["description"] = URL[index]['category']
+    #
+    #         news_list.append(article_info)
+    # # print(json.dumps(news_list, indent=4, ensure_ascii=False))
+    # log.append_log("크롤링이 완료되었습니다.")
+    # index += 1
 
 def get_paragraph(article_url):
     response = requests.get(article_url)

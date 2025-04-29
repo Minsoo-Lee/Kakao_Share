@@ -35,40 +35,42 @@ def set_task(on_done_callback, data):
 
     # URL 접속 => 팝업 창 전환
     crawling.crawl_lists()
-    if on_done_callback:
-        wx.CallAfter(on_done_callback)  # UI 업데이트는 메인 스레드에서 안전하게 수행
-    enter_url()
 
-    # 로그인 화면이 뜨는지 확인
-    if check_login_needed():
-        log.append_log("로그인을 진행합니다.")
-        driver.execute_login(data[0], data[1])
-        log.append_log("카카오 인증을 진행해주세요.")
-
-        # 못 찾을 경우 1초마다 확인
-        index = 1
-        while True:
-            try:
-                login_done = driver.check_login_done()
-                if login_done:
-                    log.append_log("카카오 인증을 완료하였습니다.")
-                    break
-            except Exception as e:
-                print(f"index = {index}")
-                time.sleep(1)
-                index += 1
-                continue
-
-    # 로그인 후 버튼 비활성화
-    driver.ready_chatroom()
-    if driver.is_chatroom_exist(data[2]):
-        log.append_log("채팅방을 탐색합니다.")
-        driver.click_chatroom()
-        driver.click_share()
-        log.append_log("공유를 완료하였습니다.")
-        driver.close_popup()
-        log.append_log("팝업창을 종료합니다.")
-        driver.deactivate_popup()
+    # 크롤링 먼저 테스트
+    # if on_done_callback:
+    #     wx.CallAfter(on_done_callback)  # UI 업데이트는 메인 스레드에서 안전하게 수행
+    # enter_url()
+    #
+    # # 로그인 화면이 뜨는지 확인
+    # if check_login_needed():
+    #     log.append_log("로그인을 진행합니다.")
+    #     driver.execute_login(data[0], data[1])
+    #     log.append_log("카카오 인증을 진행해주세요.")
+    #
+    #     # 못 찾을 경우 1초마다 확인
+    #     index = 1
+    #     while True:
+    #         try:
+    #             login_done = driver.check_login_done()
+    #             if login_done:
+    #                 log.append_log("카카오 인증을 완료하였습니다.")
+    #                 break
+    #         except Exception as e:
+    #             print(f"index = {index}")
+    #             time.sleep(1)
+    #             index += 1
+    #             continue
+    #
+    # # 로그인 후 버튼 비활성화
+    # driver.ready_chatroom()
+    # if driver.is_chatroom_exist(data[2]):
+    #     log.append_log("채팅방을 탐색합니다.")
+    #     driver.click_chatroom()
+    #     driver.click_share()
+    #     log.append_log("공유를 완료하였습니다.")
+    #     driver.close_popup()
+    #     log.append_log("팝업창을 종료합니다.")
+    #     driver.deactivate_popup()
 
 def enter_url():
     global is_chrome_init
