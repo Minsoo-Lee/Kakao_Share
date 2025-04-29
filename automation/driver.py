@@ -57,9 +57,9 @@ def check_login_needed():
     except:
         return False
 
-def execute_login():
-    driver.find_element(By.XPATH, "/html/body/div/div/div/main/article/div/div/form/div[1]/div/input").send_keys("minsoo1101@naver.com")
-    driver.find_element(By.XPATH, "/html/body/div/div/div/main/article/div/div/form/div[2]/div/input").send_keys("msLee9164@@")
+def execute_login(id, pw):
+    driver.find_element(By.XPATH, "/html/body/div/div/div/main/article/div/div/form/div[1]/div/input").send_keys(id)
+    driver.find_element(By.XPATH, "/html/body/div/div/div/main/article/div/div/form/div[2]/div/input").send_keys(pw)
     time.sleep(1)
     driver.find_element(By.XPATH, "/html/body/div/div/div/main/article/div/div/form/div[4]/button[1]").click()
     time.sleep(1)
@@ -71,6 +71,7 @@ def close_popup():
 def deactivate_popup():
     driver.switch_to.window(main_window)
     time.sleep(1)
+
 
 def check_login_done():
     try:
