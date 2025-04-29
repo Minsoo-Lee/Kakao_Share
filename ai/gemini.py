@@ -9,6 +9,18 @@ def init_gemini():
     genai.configure(api_key=gemini_key)
     model = genai.GenerativeModel('gemini-1.5-pro-latest')
 
+def get_related_url(urls):
+    global model
+
+    response = model.generate_content(f"""
+            이건 50개의 뉴스 링크들이야.
+            
+            {urls}
+            
+            이 중에서 '아기, 교육, 키즈 에이전시'와 관련 있는 기사 url 하나만 뽑아서 출력해 줘.
+            출력은 다른 말 필요 없이 url만 건네줘""")
+    print("[response] = " + response.text)
+    return response.text
 
 def get_response(p, max_retries=5):
     """

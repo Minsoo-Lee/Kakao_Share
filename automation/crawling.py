@@ -1,10 +1,10 @@
-import wx
 from bs4 import BeautifulSoup as bs
-import random
 from ai import gemini
 import json, threading
 from window import log
-from window import frame
+from automation import driver
+import time
+import wx
 
 import requests
 
@@ -17,6 +17,7 @@ import requests
 
 BASE_URL = "https://m.entertain.naver.com/now"
 
+is_chrome_init = False
 index = 0
 
 # URL = f"{BASE_URL}/news/articleList.html?sc_sub_section_code=S2N1&view_type=sm"
@@ -98,24 +99,29 @@ def start_crawling(on_done_callback=None):
 
 
 # 네이버 뉴스 크롤링
+
+# 네이버 뉴스 크롤링 (링크만 가져와서 건네주기)
 def crawl_lists():
-    global URL, BASE_URL, index
+    global BASE_URL, is_chrome_init
     news_list.clear()
+    if is_chrome_init is False:
+        log.append_log("크롬을 초기화합니다.")
+        driver.init_chrome()
+        log.append_log("크롬 초기화 완료")
+        is_chrome_init = True
+    driver.get_url(BASE_URL)
     log.append_log("크롤링을 시작합니다.")
-    headers = {
-        'User-Agent': 'Mozilla/5.0'
-    }
-    response = requests.get(BASE_URL, headers=headers)
-    print(f"======= request url = [{BASE_URL}] =======================")
+
+    time.sleep(2)
+
+    soup = bs(driver.get_pagesource(), 'lxml')
+    lists = soup.find_all("li", class_=lambda x: x and 'NewsItem_news_item__' in x)
+
+    a_tag_list = [li.find("a", href=True)["href"] for li in lists if li.find("a", href=True)]
+    print(a_tag_list)
     gemini.init_gemini()
+    gemini.get_related_url(a_tag_list)
 
-    if response.status_code == 200:  # 정상 응답 반환 시 아래 코드블록 실행
-        soup = bs(response.text, 'lxml')  # 응답 받은 HTML 파싱
-        lists = soup.find_all("li", class_=lambda x: x and 'NewsItem_news_item__' in x)
-        print("len = " + len(lists).__str__())
-
-        # 차라리 여기서 3개를 추출하는 것이 빠를지도
-        # 아직 컨셉이 잡힌 것이 없으니 놔두자
     #     for i in range(3):
     #         article_info = {}
     #

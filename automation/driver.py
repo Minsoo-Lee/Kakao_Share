@@ -24,11 +24,10 @@ def init_chrome():
     main_window = driver.current_window_handle
 
 
-def get_url():
+def get_url(url):
     global driver
-    url = URL + PORT
-    print(url)
-    driver.get("http://localhost:" + PORT)
+    print("url = " + url)
+    driver.get(url)
     time.sleep(1)
 
 
@@ -114,3 +113,6 @@ def click_chatroom():
 def click_share():
     driver.find_element(By.XPATH, "/html/body/div/div/div[2]/div[3]/button/div/span").click()
     time.sleep(1)
+
+def get_pagesource():
+    return driver.page_source
