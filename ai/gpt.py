@@ -28,7 +28,7 @@ def get_related_url(urls):
         ]
     )
 
-    content = response.choices[0].message.content
+    content = response.choices[0].message.content.replace("'", "")
     print(content)
     return content
 

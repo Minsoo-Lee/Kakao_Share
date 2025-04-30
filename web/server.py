@@ -4,6 +4,8 @@ from window import log  # log 모듈에서 가져옴
 from automation import crawling as cr
 import json
 import wx
+import urllib.parse  # URL 인코딩용
+
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Kakao_Share/
@@ -78,9 +80,18 @@ def share():
     title = cr.news_list['title'].strip().replace('"', '').replace("'", "")
     body = cr.news_list['body'].strip().replace('"', '').replace("'", "")
 
-    formatted_link = "https://localhost:9005/proxy?target=" + cr.news_list['link'].replace('https', 'http')
+    # formatted_link = "https://localhost:9005/proxy?target=" + cr.news_list['link'].replace('https', 'http')
     # formatted_link = cr.news_list['link'].replace('https', 'http')
-    print(formatted_link)
+    link = cr.news_list['link']
+    print("link = " + link)
+
+    # original_link = cr.news_list['link']
+
+    # 🔧 여기서 링크를 인코딩해서 프록시 주소로 변환
+    # encoded_link = urllib.parse.quote(original_link, safe='')
+    # link = f'https://proxy.liyao.space/{encoded_link}'
+    # print("encoded_link = ", encoded_link)
+    # print("link = ", link)
 
     return render_template('text.html', app_key='c03ce9560aa54cba52b9fc2c4db6b3aa',
-                           title=title, body=body, link=formatted_link)
+                           title=title, body=body, link=link)

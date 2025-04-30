@@ -16,8 +16,10 @@
       objectType: 'text',
       text: "["+'{{ title }}'+"]" + "\n\n" + '{{ body }}',
       link: {
-        mobileWebUrl: "https://proxy.liyao.space/" + '{{ link }}',
-        webUrl: "https://proxy.liyao.space/" + '{{ link }}',
+        // mobileWebUrl: '{{ link }}',
+        // webUrl: '{{ link }}',
+        mobileWebUrl: "https://redirect-proxy.illusionists1004.workers.dev?url=" + '{{ link }}',
+        webUrl: "https://redirect-proxy.illusionists1004.workers.dev?url=" + '{{ link }}',
       },
     });
 

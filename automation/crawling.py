@@ -122,6 +122,9 @@ def crawl_lists():
     # gemini.init_gemini()
     # news_list['link'] = gemini.get_related_url(a_tag_list)
     news_list['link'] = gpt.get_related_url(a_tag_list)
+
+    time.sleep(3)
+
     driver.get_url(news_list['link'])
     body = driver.get_body()
 
