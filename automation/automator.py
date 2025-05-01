@@ -78,6 +78,7 @@ def enter_url():
     driver.get_url("http://localhost:" + PORT)
     time.sleep(2)
     driver.click_share_button()
+    time.sleep(2)
 
     # 팝업창 전환 후 로그인
     driver.activate_popup()

@@ -6,6 +6,7 @@ from automation import driver
 import time
 import wx
 from ai import gpt
+import csv
 
 import requests
 
@@ -116,24 +117,46 @@ def crawl_lists():
     time.sleep(2)
 
     soup = bs(driver.get_pagesource(), 'lxml')
+
     lists = soup.find_all("li", class_=lambda x: x and 'NewsItem_news_item__' in x)
+    body_lists = soup.find_all("p", class_=lambda x: x and 'NewsItem_description__' in x)
 
     a_tag_list = [li.find("a", href=True)["href"] for li in lists if li.find("a", href=True)]
+
+    body_link_list = [[body_lists[i].text[:250], a_tag_list[i]] for i in range(len(lists))]
+
+    # with open('output.csv', mode='w', newline='', encoding='utf-8') as file:
+    #     writer = csv.writer(file)
+    #
+    #     # 헤더 (선택 사항)
+    #     writer.writerow(['Column1', 'Column2'])
+    #
+    #     # 배열의 각 행을 CSV에 작성
+    #     for row in csv_file_list:
+    #         writer.writerow(row)
+
+
+
     # gemini.init_gemini()
     # news_list['link'] = gemini.get_related_url(a_tag_list)
-    news_list['link'] = gpt.get_related_url(a_tag_list)
 
-    time.sleep(3)
+    if a_tag_list:
+        print(len(a_tag_list))
+        news_list['link'] =gpt.get_related_url(body_link_list)
 
-    driver.get_url(news_list['link'])
-    body = driver.get_body()
 
-    # title, body = gemini.get_title_body(body)
-    title, body = gpt.get_title_body(body)
-    wx.CallAfter(log.append_log, body)
-    wx.CallAfter(log.append_log, title)
-    news_list['title'] = title
-    news_list['body'] = body
+        time.sleep(3)
+
+        # gpt 확인 후 다음 해제
+        driver.get_url(news_list['link'])
+        body = driver.get_body()
+
+        # title, body = gemini.get_title_body(body)
+        title, body = gpt.get_title_body(body)
+        wx.CallAfter(log.append_log, body)
+        wx.CallAfter(log.append_log, title)
+        news_list['title'] = title
+        news_list['body'] = body
 
     #     for i in range(3):
     #         article_info = {}
