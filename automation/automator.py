@@ -23,7 +23,7 @@ def start_task(on_done_callback=None, data=None):
     scheduler.add_job(
         lambda: threading.Thread(target=run_task, daemon=False).start(),
         'interval',
-        minutes=5
+        hours=4
     )
     scheduler.start()
 
